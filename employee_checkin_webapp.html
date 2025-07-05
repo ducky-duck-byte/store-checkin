@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>출퇴근 체크</title>
+  <style>
+    body {
+      font-family: sans-serif;
+      text-align: center;
+      margin: 0;
+      padding: 2rem;
+    }
+    .button {
+      padding: 1rem 2rem;
+      margin: 1rem;
+      font-size: 1.2rem;
+      cursor: pointer;
+    }
+    select, input[type="password"] {
+      padding: 0.5rem;
+      font-size: 1rem;
+      margin: 1rem;
+    }
+    .admin-area {
+      margin-top: 2rem;
+      display: none;
+    }
+    table {
+      margin: auto;
+      border-collapse: collapse;
+      margin-top: 2rem;
+    }
+    th, td {
+      padding: 0.5rem 1rem;
+      border: 1px solid #ccc;
+    }
+  </style>
+</head>
+<body>
+  <h1>출퇴근 체크</h1>
+  <div>
+    <label for="name">직원이름:</label>
+    <select id="name">
+      <option>박흥진</option>
+      <option>조필선</option>
+    </select>
+  </div>
+  <button class="button" onclick="checkIn()">출근</button>
+  <button class="button" onclick="checkOut()">퇴근</button>
+
+  <div class="admin-area">
+    <h2>관리자 기록 확인</h2>
+    <table>
+      <thead>
+        <tr><th>이름</th><th>출근 시간</th><th>퇴근 시간</th></tr>
+      </thead>
+      <tbody id="recordTable"></tbody>
+    </table>
+  </div>
+
+  <div style="margin-top: 3rem;">
+    <input type="password" id="adminPass" placeholder="관리자 비밀번호 입력">
+    <button onclick="unlockAdmin()">관리자 접속</button>
+  </div>
+
+  <script>
+    const password = "8842";
+    let records = {
+      "박흥진": { checkIn: "", checkOut: "" },
+      "조필선": { checkIn: "", checkOut: "" }
+    };
+
+    function getTime() {
+      const now = new Date();
+      return now.toLocaleString("ko-KR");
+    }
+
+    function checkIn() {
+      const name = document.getElementById("name").value;
+      records[name].checkIn = getTime();
+      alert(name + " 출근 처리 완료");
+      updateTable();
+    }
+
+    function checkOut() {
+      const name = document.getElementById("name").value;
+      records[name].checkOut = getTime();
+      alert(name + " 퇴근 처리 완료");
+      updateTable();
+    }
+
+    function unlockAdmin() {
+      const input = document.getElementById("adminPass").value;
+      if (input === password) {
+        document.querySelector(".admin-area").style.display = "block";
+        updateTable();
+      } else {
+        alert("비밀번호가 틀렸습니다");
+      }
+    }
+
+    function updateTable() {
+      const table = document.getElementById("recordTable");
+      table.innerHTML = "";
+      for (const name in records) {
+        const row = `<tr><td>${name}</td><td>${records[name].checkIn}</td><td>${records[name].checkOut}</td></tr>`;
+        table.innerHTML += row;
+      }
+    }
+  </script>
+</body>
+</html>
